@@ -1,8 +1,5 @@
-import binascii
 import hashlib
 import hmac
-import os
-import random
 import time
 
 start_time = time.time()
