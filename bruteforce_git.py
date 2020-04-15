@@ -1,5 +1,6 @@
-import os, binascii, hmac, hashlib, time, random
-from statistics import mean
+import hashlib
+import hmac
+import time
 
 start_time = time.time()
 # For simplicity we are using the passkey to generate r* in every session. However, ideally the attacker must input
