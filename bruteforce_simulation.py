@@ -1,4 +1,14 @@
-import os, binascii, hmac, hashlib, time, random
+"""This is a simulation of the brute-force attack on the SM passkey entry protocol. We generate random DHKey,
+Na0 and Nb0 values for every SSP session and calculate r*. Depending on the value of variable "n1", we set the known
+number of bits. The attack runs 50 times and calculate average time it takes to guess the correct passkey for one
+instance. """
+
+import binascii
+import hashlib
+import hmac
+import os
+import random
+import time
 from statistics import mean
 
 start_time = time.time()
@@ -10,7 +20,7 @@ PKbx = "f465e43ff23d3f1b9dc7dfc04da8758184dbc966204796eccf0d6cf5e16500cc"
 """
 tmp = 0
 count = 0
-n1 = 2
+n1 = 4
 ssp = [0] * 50
 
 

@@ -1,9 +1,12 @@
+"""This is a realtime working of the brute-force attack on the enhanced passkey entry protocol. The user needs to
+input DHKey values for every SSP session, the random integer values n' and the obtained r*. The attack displays the list of potential passkeys based
+on the known r* bits."""
+
 import hashlib
 import hmac
 import time
 
 start_time = time.time()
-# For simplicity we are using the passkey to generate r* in every session. However, ideally the attacker must input obtained r* bits and the random integers n' for every session.
 """datasets sample 
 DHkey = "2c31a47b5779809ef44cb5eaaf5c3e43d5f8faad4a8794cb987e9b03745c78dd"
 """

