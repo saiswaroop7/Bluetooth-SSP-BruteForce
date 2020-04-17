@@ -18,7 +18,7 @@ PKax = "2c31a47b5779809ef44cb5eaaf5c3e43d5f8faad4a8794cb987e9b03745c78dd"
 PKbx = "f465e43ff23d3f1b9dc7dfc04da8758184dbc966204796eccf0d6cf5e16500cc"
 """
 n = [0] * 20
-no = 2
+no = 1
 x = [0] * no
 y = [0] * no
 tmp = 0
