@@ -45,13 +45,8 @@ def firstbrute(dhkey, na, nb, passwords):
     hexdat = h.hexdigest()
     c = str(bin(int(hexdat, 16)))
     c = c[2:]
-    """
-    print("Enter known r: ")
-    c = str(input())
-    n = len(c)
-    """
     print("Binary 20-bit Passkey: " + pas[2:22].zfill(20))
-    print("Known r*: " + c[:10])
+    print("Known r*: " + c[:n1])
     count = 0
 
     # Brute Force
@@ -100,12 +95,6 @@ def conbrute(count, dhkey, na, nb, passwords):
     hexdat = h.hexdigest()
     c = str(bin(int(hexdat, 16)))
     c = c[2:]
-    """
-    #Enter known r* 
-    print("Enter known r: ")
-    c = str(input())
-    n = len(c)
-    """
     print("Binary 20-bit Passkey: " + pas[2:22].zfill(20))
     print("Known r*: " + c[:10])
     i = 0
