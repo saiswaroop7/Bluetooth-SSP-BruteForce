@@ -20,7 +20,7 @@ def firstbrute(dhkey, passwords):
     count = 0
     ntmp = input("Enter random integers obtained separated by spaces: ")
     n = ntmp.split(" ")
-    r = input("Enter obtained r*a bits: ")
+    r = input("Enter obtained r* bits: ")
     y = list(r)
     nr = len(y)
     x = [0] * nr
@@ -39,7 +39,7 @@ def firstbrute(dhkey, passwords):
         cb = cb[2:]
         cb = cb.zfill(256)
         for i in range(0, nr):
-            x = cb[n[i]]
+            x[i] = cb[n[i]]
         if x == y:
             passwords[count] = passbrute
             count = count + 1
@@ -58,7 +58,7 @@ def conbrute(count, dhkey, passwords):
     ntmp = input("Enter random integers obtained separated by spaces: ")
     n = ntmp.split(" ")
     print(n)
-    r = input("Enter obtained r*a bits: ")
+    r = input("Enter obtained r* bits: ")
     y = list(r)
     nr = len(y)
     x = [0] * nr
@@ -78,7 +78,7 @@ def conbrute(count, dhkey, passwords):
         cb = cb[2:]
         cb = cb.zfill(256)
         for i in range(0, nr):
-            x = cb[n[i]]
+            x[i] = cb[n[i]]
         if x == y:
             passwords[newcount] = passbrute
             newcount = newcount + 1

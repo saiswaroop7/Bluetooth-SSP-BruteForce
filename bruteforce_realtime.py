@@ -30,7 +30,7 @@ def firstbrute(dhkey, na, nb, passwords):
     na_bin = na_bin.zfill(128)
     nb_bin = nb_bin.zfill(128)
     dhkey_bin = dhkey_bin.zfill(256)
-    r = input("Enter obtained r*a bits: ")
+    r = input("Enter obtained r* bits: ")
     c = list(r)
     n = len(c)
     count = 0
